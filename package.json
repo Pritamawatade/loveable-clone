@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "inngest": "pnpm dlx inngest-cli@latest dev"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",
