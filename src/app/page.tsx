@@ -1,7 +1,7 @@
 "use client"
 import { useTRPC } from "@/trpc/client";
 import { Button } from "@/components/ui/button";
-import {openai, createAgent} from "@inngest/agent-kit";
+
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
 import { toast } from "sonner";
