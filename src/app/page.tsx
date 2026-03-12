@@ -1,19 +1,28 @@
-import { getQueryClient, trpc } from "@/trpc/server";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { Client } from "./Client";
-import { Suspense } from "react";
+"use client"
+import { useTRPC } from "@/trpc/client";
+import { Button } from "@/components/ui/button";
+import {openai, createAgent} from "@inngest/agent-kit";
+import { useMutation } from "@tanstack/react-query";
+import React from "react";
+import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
 
+export default  function Home() {
 
-export default async function Home() {
-  const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(trpc.createAI.queryOptions({ text: "Pritam" }))
-  
+  const [value, setValue] = React.useState("");
+  const trpc = useTRPC();
+
+  const invoke = useMutation(trpc.invoke.mutationOptions({
+    onSuccess: () =>{
+      toast.success("AI made call")
+    }
+  }))
+
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={<p>Loading...</p>}>
-        <Client />
-      </Suspense>
-    </HydrationBoundary>
+<div>
+  <Input type="text" onChange={(e) => setValue(e.target.value)} value={value} />
+  <Button onClick={() => invoke.mutate({value: value})}>Call AI</Button>
+</div>
 
   );
 }
