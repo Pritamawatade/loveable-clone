@@ -1,0 +1,17 @@
+# This is a config for E2B sandbox template.
+# You can use template ID (3c626no0oswu49azse48) or template name (pritam-2) to create a sandbox:
+
+# Python SDK
+# from e2b import Sandbox, AsyncSandbox
+# sandbox = Sandbox.create("pritam-2") # Sync sandbox
+# sandbox = await AsyncSandbox.create("pritam-2") # Async sandbox
+
+# JS SDK
+# import { Sandbox } from 'e2b'
+# const sandbox = await Sandbox.create('pritam-2')
+
+team_id = "099f5729-aa16-4a84-aa50-852c6ce6fd0a"
+start_cmd = "/compile_page.sh"
+dockerfile = "e2b.Dockerfile"
+template_name = "pritam-2"
+template_id = "3c626no0oswu49azse48"
