@@ -1,8 +1,9 @@
-import { createAgent, createTool, openai } from "@inngest/agent-kit";
+import { createAgent, createNetwork, createTool, openai } from "@inngest/agent-kit";
 import { inngest } from "./client";
 import {Sandbox} from "e2b"
-import { getSandbox } from "./utils";
+import { getSandbox, lastAssistantTextMessageContent } from "./utils";
 import z, { array } from "zod";
+import { PROMPT } from "@/prompt";
 
 export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
@@ -17,11 +18,12 @@ export const helloWorld = inngest.createFunction(
   const codeAgent = createAgent({
     name: "AI Agent",
     description: "An AI agent that writes code",
-    system: "You are a helpful assistant that writes code for the user",
-    model: openai({model: "gpt-4.1"}),
+    system: PROMPT,
+    model: openai({model: "gpt-4.1", defaultParameters:{temperature: 0.1}
+    }),
     tools: [
       createTool({
-        name: "Terminal",
+        name: "terminal",
         description: "Use the terminal to run commands",
         parameters: z.object({
           command: z.string().describe("The command to run in the terminal")
@@ -49,7 +51,7 @@ export const helloWorld = inngest.createFunction(
         }
       }),
       createTool({
-        name: "Create or update file in the sandbox",
+        name: "creatrOrUpdateFiles",
         description: "Create or update a file in the sandbox.",
         parameters: z.object({
           files: z.array(
@@ -83,7 +85,7 @@ export const helloWorld = inngest.createFunction(
       }),
 
       createTool({
-        name: "Read file from sandbox",
+        name: "readFiles",
         description: "Read a file from the sandbox",
         parameters: z.object({
           files: z.array(z.string()).describe("The path of the file to read")
@@ -107,9 +109,35 @@ export const helloWorld = inngest.createFunction(
           })
         }
       })
-    ]
+    ],
+    lifecycle: {
+      onResponse: async ({result, network})=>{
+        const lastAssistantMessageText = lastAssistantTextMessageContent(result);
+        if(lastAssistantMessageText && network){
+          if(lastAssistantMessageText.includes("<task_summary>")){
+            network.state.data.summary = lastAssistantMessageText;
+          }
+        }
+
+        return result;
+      }
+    }
   })
-    const {output} = await codeAgent.run(`${event.data.value}`)
+
+  const network = await createNetwork({
+    name: "coding-agent-network",
+    agents: [codeAgent],
+    maxIter: 10,
+    router: async ({network})=>{
+      if(network.state.data.summary){
+        return;
+      }
+      return codeAgent;
+    }
+  })
+   
+  const result = await network.run(event.data.value);
+
 
     const sandboxUrl = await step.run("get-sandbox-url", async ()=>{
       const sandbox = await getSandbox(sandboxId);
@@ -119,6 +147,11 @@ export const helloWorld = inngest.createFunction(
   
     
     
-    return  {output, sandboxUrl}
+    return  {
+      url: sandboxUrl,
+      title: "Fragment",
+      files: network.state.data.files,
+      summary: network.state.data.summary || "No summary available"
+    }
   },
 );
