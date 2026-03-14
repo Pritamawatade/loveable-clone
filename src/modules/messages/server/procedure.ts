@@ -1,0 +1,21 @@
+import prisma from "@/lib/db";
+import { baseProcedure, createTRPCRouter } from "@/trpc/init";
+import z from "zod";
+
+export const messagesRouter = createTRPCRouter({
+    create: baseProcedure
+    .input(
+       z.object({
+        value: z.string().min(1, "Value is required").describe("The message to send to the AI")
+       }) 
+    )
+    .mutation(async ({input})=>{
+        await prisma.message.create({
+            data:{
+                content: input.value,
+                role: "USER",
+                type: "RESULT"
+            }
+        })
+    })
+})

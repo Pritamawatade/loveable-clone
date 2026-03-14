@@ -15,6 +15,9 @@ export default  function Home() {
   const invoke = useMutation(trpc.invoke.mutationOptions({
     onSuccess: () =>{
       toast.success("AI made call")
+    },
+    onError: (err) => {
+      toast.error("AI call failed: " + err.message)
     }
   }))
 
