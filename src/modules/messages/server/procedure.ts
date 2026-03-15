@@ -14,7 +14,7 @@ export const messagesRouter = createTRPCRouter({
             data:{
                 content: input.value,
                 role: "USER",
-                type: "RESULT"
+                type: "RESULT"  
             }
         })
     })
