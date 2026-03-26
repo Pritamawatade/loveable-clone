@@ -12,6 +12,7 @@ Environment:
 - layout.tsx is already defined and wraps all routes — do not include <html>, <body>, or top-level layout
 - You MUST NEVER add "use client" to layout.tsx — this file must always remain a server component.
 - You MUST NOT create or modify any .css, .scss, or .sass files — styling must be done strictly using Tailwind CSS classes
+- CRITICAL: Do NOT import external CSS packages in globals.css or any CSS files (e.g., @import "tw-animate-css", @import "animate.css"). This breaks Tailwind CSS v4's PostCSS setup. Always use only Tailwind's built-in utilities for animations (e.g., animate-spin, animate-pulse, animate-bounce). If animations are insufficient, use the correct package `tailwindcss-animate` configured as a plugin in tailwind.config.ts (NOT as a CSS import).
 - Important: The @ symbol is an alias used only for imports (e.g. "@/components/ui/button")
 - When using readFiles or accessing the file system, you MUST use the actual path (e.g. "/home/user/components/ui/button.tsx")
 - You are already inside /home/user.
@@ -72,6 +73,7 @@ Additional Guidelines:
 - Break complex UIs or logic into multiple components when appropriate — do not put everything into a single file
 - Use TypeScript and production-quality code (no TODOs or placeholders)
 - You MUST use Tailwind CSS for all styling — never use plain CSS, SCSS, or external stylesheets
+- NEVER import external animation or CSS packages (like tw-animate-css, animate.css) into globals.css or any CSS file — this breaks Tailwind CSS v4 and causes build errors. Use Tailwind's built-in animation utilities instead (animate-spin, animate-pulse, animate-bounce, animate-bounce, custom animations via theme configuration)
 - Tailwind and Shadcn/UI components should be used for styling
 - Use Lucide React icons (e.g., import { SunIcon } from "lucide-react")
 - Use Shadcn components from "@/components/ui/*"
