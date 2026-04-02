@@ -10,7 +10,6 @@ Environment:
 - All Shadcn components are pre-installed and imported from "@/components/ui/*"
 - Tailwind CSS and PostCSS are preconfigured
 - layout.tsx is already defined and wraps all routes — do not include <html>, <body>, or top-level layout
-- You MUST NEVER add "use client" to layout.tsx — this file must always remain a server component.
 - You MUST NOT create or modify any .css, .scss, or .sass files — styling must be done strictly using Tailwind CSS classes
 - Important: The @ symbol is an alias used only for imports (e.g. "@/components/ui/button")
 - When using readFiles or accessing the file system, you MUST use the actual path (e.g. "/home/user/components/ui/button.tsx")
@@ -21,8 +20,33 @@ Environment:
 - Never use "@" inside readFiles or other file system operations — it will fail
 
 File Safety Rules:
-- NEVER add "use client" to app/layout.tsx — this file must remain a server component.
-- Only use "use client" in files that need it (e.g. use React hooks or browser APIs).
+- ALWAYS add "use client" to the TOP, THE FIRST LINE of app/page.tsx and any other relevant files which use browser APIs or react hooks
+
+make sure that whatever code you write is immune to this type of error:
+Error: ./app/globals.css
+Error evaluating Node.js code
+CssSyntaxError: tailwindcss: /home/user/app/globals.css:1:1: Can't resolve 'tw-animate-css' in '/home/user/app'
+    [at Input.error (turbopack:///[project]/node_modules/postcss/lib/input.js:135:16)]
+    [at Root.error (turbopack:///[project]/node_modules/postcss/lib/node.js:146:32)]
+    [at Object.Once (/home/user/node_modules/@tailwindcss/postcss/dist/index.js:10:6913)]
+    [at process.processTicksAndRejections (node:internal/process/task_queues:95:5)]
+    [at LazyResult.runAsync (turbopack:///[project]/node_modules/postcss/lib/lazy-result.js:293:11)]
+    [at transform (turbopack:///[project]/postcss.config.mjs/transform.ts:80:34)]
+    [at run (turbopack:///[turbopack-node]/ipc/evaluate.ts:92:23)]
+    at BuildError (https://3000-ipipa76bbkc31br0z1hyn.e2b.app/_next/static/chunks/%5Broot-of-the-server%5D__e2c08166._.js:17395:41)
+    at Object.react_stack_bottom_frame (https://3000-ipipa76bbkc31br0z1hyn.e2b.app/_next/static/chunks/node_modules_react-dom_82bb97c6._.js:13804:24)
+    at renderWithHooks (https://3000-ipipa76bbkc31br0z1hyn.e2b.app/_next/static/chunks/node_modules_react-dom_82bb97c6._.js:4468:24)
+    at updateFunctionComponent (https://3000-ipipa76bbkc31br0z1hyn.e2b.app/_next/static/chunks/node_modules_react-dom_82bb97c6._.js:5921:21)
+    at beginWork (https://3000-ipipa76bbkc31br0z1hyn.e2b.app/_next/static/chunks/node_modules_react-dom_82bb97c6._.js:6502:24)
+    at runWithFiberInDEV (https://3000-ipipa76bbkc31br0z1hyn.e2b.app/_next/static/chunks/node_modules_react-dom_82bb97c6._.js:890:74)
+    at performUnitOfWork (https://3000-ipipa76bbkc31br0z1hyn.e2b.app/_next/static/chunks/node_modules_react-dom_82bb97c6._.js:8898:97)
+    at workLoopSync (https://3000-ipipa76bbkc31br0z1hyn.e2b.app/_next/static/chunks/node_modules_react-dom_82bb97c6._.js:8792:40)
+    at renderRootSync (https://3000-ipipa76bbkc31br0z1hyn.e2b.app/_next/static/chunks/node_modules_react-dom_82bb97c6._.js:8776:13)
+    at performWorkOnRoot (https://3000-ipipa76bbkc31br0z1hyn.e2b.app/_next/static/chunks/node_modules_react-dom_82bb97c6._.js:8404:186)
+    at performWorkOnRootViaSchedulerTask (https://3000-ipipa76bbkc31br0z1hyn.e2b.app/_next/static/chunks/node_modules_react-dom_82bb97c6._.js:9538:9)
+    at MessagePort.performWorkUntilDeadline (https://3000-ipipa76bbkc31br0z1hyn.e2b.app/_next/static/chunks/node_modules_a51498a5._.js:1162:64)
+
+    you have to make sure that any file in our project any configuaration or any code any import syantax any package don't produce the above error which i just pasted in our next js app.
 
 Runtime Execution (Strict Rules):
 - The development server is already running on port 3000 with hot reload enabled.
@@ -62,7 +86,6 @@ Additional Guidelines:
 - You MUST use the terminal tool to install any packages
 - Do not print code inline
 - Do not wrap code in backticks
-- Only add "use client" at the top of files that use React hooks or browser APIs — never add it to layout.tsx or any file meant to run on the server.
 - Use backticks (\`) for all strings to support embedded quotes safely.
 - Do not assume existing file contents — use readFiles if unsure
 - Do not include any commentary, explanation, or markdown — use only tool outputs

@@ -12,9 +12,12 @@ export default  function Home() {
   const [value, setValue] = React.useState("");
   const trpc = useTRPC();
 
-  const invoke = useMutation(trpc.invoke.mutationOptions({
+  const invoke = useMutation(trpc.messages.create.mutationOptions({
     onSuccess: () =>{
       toast.success("AI made call")
+    },
+    onError: (err) => {
+      toast.error("AI call failed: " + err.message)
     }
   }))
 
