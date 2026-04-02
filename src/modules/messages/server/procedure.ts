@@ -19,17 +19,17 @@ export const messagesRouter = createTRPCRouter({
                 }
             });
 
-            // await inngest.send({
-            //     name:"test/hello.world",
-            //     data:{
-            //         value: input.value
-            //     }
-            // })
+            await inngest.send({
+                name:"code-agent/run",
+                data:{
+                    value: input.value
+                }
+            })
             return createdMessage;
         }),
 
     getMany: baseProcedure.query(async () => {
-        const messages = await prisma.message.findMany({ orderBy: { updatedAt: "asc" } });
+        const messages = await prisma.message.findMany({ orderBy: { updatedAt: "asc" }, include: { fragments: true } });
         return messages;
     })
 })
