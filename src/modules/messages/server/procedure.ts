@@ -5,26 +5,31 @@ import z from "zod";
 
 export const messagesRouter = createTRPCRouter({
     create: baseProcedure
-    .input(
-       z.object({
-        value: z.string().min(1, "Value is required").describe("The message to send to the AI")
-       }) 
-    )
-    .mutation(async ({input})=>{
-        const createdMessage = await prisma.message.create({
-            data:{
-                content: input.value,
-                role: "USER",
-                type: "RESULT"  
-            }
-        });
-        
-        await inngest.send({
-            name:"test/hello.world",
-            data:{
-                value: input.value
-            }
-        })
-        return createdMessage;
+        .input(
+            z.object({
+                value: z.string().min(1, "Value is required").describe("The message to send to the AI")
+            })
+        )
+        .mutation(async ({ input }) => {
+            const createdMessage = await prisma.message.create({
+                data: {
+                    content: input.value,
+                    role: "USER",
+                    type: "RESULT"
+                }
+            });
+
+            // await inngest.send({
+            //     name:"test/hello.world",
+            //     data:{
+            //         value: input.value
+            //     }
+            // })
+            return createdMessage;
+        }),
+
+    getMany: baseProcedure.query(async () => {
+        const messages = await prisma.message.findMany({ orderBy: { updatedAt: "asc" } });
+        return messages;
     })
 })
