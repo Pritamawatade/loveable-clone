@@ -160,6 +160,7 @@ export const codeAgentFunction = inngest.createFunction(
 
         return await prisma.message.create({
           data:{
+            projectId: event.data.projectId,
             role: "ASSISTANT",
             type: "RESULT",
             content: `Something went wrong please try again. The agent failed to produce a result. Summary: ${result.state.data.summary || "No summary"} Files: ${JSON.stringify(result.state.data.files || {})}.`
@@ -169,6 +170,7 @@ export const codeAgentFunction = inngest.createFunction(
       }
       return await prisma.message.create({
         data: {
+          projectId: event.data.projectId,
           content: result.state.data.summary || "No summary",
           role: "ASSISTANT",
           type: "RESULT",

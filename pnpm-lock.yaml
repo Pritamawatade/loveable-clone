@@ -77,6 +77,9 @@ importers:
       radix-ui:
         specifier: ^1.4.3
         version: 1.4.3(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      random-word-slugs:
+        specifier: ^0.1.7
+        version: 0.1.7
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -4740,6 +4743,9 @@ packages:
         optional: true
       '@types/react-dom':
         optional: true
+
+  random-word-slugs@0.1.7:
+    resolution: {integrity: sha512-8cyzxOIDeLFvwSPTgCItMXHGT5ZPkjhuFKUTww06Xg1dNMXuGxIKlARvS7upk6JXIm41ZKXmtlKR1iCRWklKmg==}
 
   range-parser@1.2.1:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
@@ -10558,6 +10564,8 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.14
       '@types/react-dom': 19.2.3(@types/react@19.2.14)
+
+  random-word-slugs@0.1.7: {}
 
   range-parser@1.2.1: {}
 
